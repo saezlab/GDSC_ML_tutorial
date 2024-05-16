@@ -1,1 +1,2 @@
 # GDSC_ML_tutorial
+To reproduce, Download all RNA-Seq processed data from https://cellmodelpassports.sanger.ac.uk/downloads (rnaseq_all_20220624.zip) and decompress it in data/cellmodelpassport folder. Install the decoupleR, reshape2 and dplyr, caret and glmnet packages
