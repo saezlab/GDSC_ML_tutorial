@@ -22,15 +22,18 @@ expr_matrix <- expr_matrix[,-1]
 
 #ML happens here
 set.seed(42)
+
+#build design matrix
 X = model.matrix(LN_IC50 ~ ., expr_matrix)[, -1]
 y = expr_matrix$LN_IC50
 
-
+#train the model and get the coeficents
 fit_ridge_cv = cv.glmnet(X, y, alpha = 0, nlambda = 100)
 plot(fit_ridge_cv)
 sqrt(fit_ridge_cv$cvm[fit_ridge_cv$lambda == fit_ridge_cv$lambda.1se])
 coefs_ridge_cv <- get_coef_dataframe(fit_ridge_cv)
 
+#check the model fit visualy
 fit_to_plot <- fit_ridge_cv
 data_to_model <- expr_matrix
 best_lambda <- fit_to_plot$lambda.1se
@@ -38,7 +41,6 @@ response <- data_to_model$LN_IC50
 predictions <- predict(fit_to_plot, s = best_lambda, newx = as.matrix(data_to_model[,-which(names(data_to_model) == "LN_IC50")]))
 obs_vs_pred <- data.frame(Observed = response, Predicted = predictions)
 names(obs_vs_pred) <- c("Observed","Predicted")
-
 ggplot(obs_vs_pred, aes(x = Observed, y = Predicted)) +
   geom_point() +
   geom_smooth(method = "lm", col = "red") +
@@ -67,6 +69,7 @@ plot(fit_ridge_TF_cv)
 sqrt(fit_ridge_TF_cv$cvm[fit_ridge_TF_cv$lambda == fit_ridge_TF_cv$lambda.1se])
 coefs_ridge_TF_cv <- get_coef_dataframe(fit_ridge_TF_cv)
 
+#check the model fit visualy
 fit_to_plot <- fit_ridge_TF_cv
 data_to_model <- TF_matrix
 best_lambda <- fit_to_plot$lambda.1se
@@ -74,7 +77,6 @@ response <- data_to_model$LN_IC50
 predictions <- predict(fit_to_plot, s = best_lambda, newx = as.matrix(data_to_model[,-which(names(data_to_model) == "LN_IC50")]))
 obs_vs_pred <- data.frame(Observed = response, Predicted = predictions)
 names(obs_vs_pred) <- c("Observed","Predicted")
-
 ggplot(obs_vs_pred, aes(x = Observed, y = Predicted)) +
   geom_point() +
   geom_smooth(method = "lm", col = "red") +
